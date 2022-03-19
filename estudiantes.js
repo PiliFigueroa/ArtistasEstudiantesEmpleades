@@ -8520,18 +8520,118 @@ const casaConMejoresEstudiantes = (estudiantes) => {
     return casaConMejoresEstudiantes
 }
 
-console.log(casaConMejoresEstudiantes(estudiantes))
+//console.log(casaConMejoresEstudiantes(estudiantes))
 
 //estudiantesPorMateriaAprobada, que tome por parámetro el nombre de una materia y un array de estudiantes y devuelva una array con les estudiantes que tienen en dicha materia un promedio superior a 6
 
+const estudiantesPorMateriaAprobada = (nombreMateria, estudiantes) => estudiantes.filter((estudiante) => {
+    for (const materia of estudiante.materias) {
+      if (materia.nombre === nombreMateria && obtenerPromedioDeEstudiante(estudiante) > 6) {
+        return true
+      }
+    }
+})
 
+//console.log(estudiantesPorMateriaAprobada("Vuelo", estudiantes))
 
 //obtenerInfoResumida, que tome por parámetro un array de estudiantes y devuelva un array con objetos, habiendo un objeto por estudiante, donde cada objeto tiene las siguientes propiedades: nombre, casa, promedio, amigues (cantidad)
 
+const obtenerInfoResumida = (estudiantes) =>  estudiantes.map(estudiante => {
+    const { nombreCompleto: {nombre, apellido}, casa, amigues } = estudiante
+    return {
+      nombre: `${nombre} ${apellido}`,
+      casa: casa,
+      amigues: amigues.length,
+      promedio: obtenerPromedioDeEstudiante(estudiante)
+    }
+  })
+
+  //console.log(obtenerInfoResumida(estudiantes))
+
 //cantidadDeEstudiantesPorCasa, que tome por parámetro un array de estudiantes y devuelva un objeto con los nombres de las casas como propiedades y la cantidad de estudiantes por casa (no debe contar amigues)
+
+const cantidadDeEstudiantesPorCasa = (estudiantes) => {
+  let casas = []
+  for (const { casa } of estudiantes) {
+      !casas.includes(casa) && casas.push(casa)
+  }
+  let newObj = {}
+  for (const casa of casas) {
+    newObj[casa] = estudiantes.filter(estudiante => estudiante.casa === casa).length
+  }
+  return newObj
+}
+
+//console.log(cantidadDeEstudiantesPorCasa(estudiantes))
 
 //cantidadDeEstudiantesPorMateriaAprobada, que tome por parámetro un array de estudiantes y devuelva un objeto con los nombres de las materias como propiedades y la cantidad de estudiantes que aprobaron dicha materia (promedio superior a 6)
 
+const cantidadDeEstudiantesPorMateriaAprobada = (estudiantes) => {
+  let nombreMaterias = []
+  for (const { materias } of estudiantes) {
+    for (const materia of materias) {
+      !nombreMaterias.includes(materia.nombre) && nombreMaterias.push(materia.nombre)
+    }
+  }
+  let newObj = {}
+  for (const materia of nombreMaterias) {
+    newObj[materia] = estudiantesConPromedioMayorA(6, estudiantes).length
+  }
+  return newObj
+}
+
+//console.log(cantidadDeEstudiantesPorMateriaAprobada(estudiantes))
+
 //promedioPorMateria, que tome por parámetro un array de estudiantes y devuelva un objeto con los nombres de las materias como propiedades y el promedio total de dicha materia entre todes les estudiantes (suma de todos los promedios divido la cantidad de estudiantes)
 
+const promedioPorMateriaDeEstudiantes = (nombreMateria, estudiantes) => {
+  let suma = 0
+  for (const { materias } of estudiantes) {
+    for (const materia of materias) {
+      if (materia.nombre === nombreMateria) {
+        suma += materia.promedio
+      }
+    }
+  }
+  return suma / estudiantes.length
+}
+
+const promedioPorMateria = (estudiantes) => {
+  let nombreMaterias = []
+  for (const { materias } of estudiantes) {
+    for (const materia of materias) {
+      !nombreMaterias.includes(materia.nombre) && nombreMaterias.push(materia.nombre)
+    }
+  }
+  let newObj = {}
+  for (const materia of nombreMaterias) {
+    newObj[materia] = promedioPorMateriaDeEstudiantes(materia, estudiantes)
+  }
+  return newObj
+}
+
+//console.log(promedioPorMateria(estudiantes))
+
 //familiarPreferido, que tome por parámetro un array de estudiantes y devuelva el familiar que más estudiantes tienen
+
+const familiarPreferido = (estudiantes) => {
+  let nombreFamiliar = []
+  for (const { familiar } of estudiantes) {
+      !nombreFamiliar.includes(familiar) && nombreFamiliar.push(familiar)
+  }
+  let newObj = {}
+  for (const familiar of nombreFamiliar) {
+    newObj[familiar] = estudiantes.filter(estudiante => estudiante.familiar === familiar).length
+  }
+  let familiarPreferido = ""
+  let inicial = 0
+  for (const familiar in newObj) {
+    if (inicial < newObj[familiar]) {
+      inicial = newObj[familiar]
+      familiarPreferido = familiar
+    }
+  }
+  return familiarPreferido
+}
+
+//console.log(familiarPreferido(estudiantes))
