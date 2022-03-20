@@ -1236,3 +1236,127 @@ const empleadesQueSabenLenguajes = (arrayLenguajes) => empleades.filter(({ lengu
 
 const empleadesQueSabenAlgunosLenguajes = (arrayLenguajes) => empleades.filter(({ lenguajes }) => lenguajes.some(lenguaje => arrayLenguajes.includes(lenguaje)))
 //console.log(empleadesQueSabenAlgunosLenguajes(["Java", "Ruby"]))
+
+// empleadesConMejorSueldo, que devuelva un array con los 10 mejores empleades pagos (investigar metodo sort)
+
+const empleadesConMejorSueldo = () => {
+  const mejoresSueldos = empleades.sort((a, b) => a.sueldo - b.sueldo)
+  return mejoresSueldos.slice(90)
+}
+//console.log(empleadesConMejorSueldo())
+
+// obtenerTitulosCompletos, que devuelva un array donde cada elemento es un string con la forma "nombre, puesto seniority, area", p.ej.: "Nadia Conrad, Senior Backend Developer, Desarrollo", habiendo un elemento por cada empleade (usar map)
+
+const obtenerTitulosCompletos = () => empleades.map(({ seniority, area, puesto, nombre }) => `${nombre}, ${seniority} ${puesto}, ${area}`)
+//console.log(obtenerTitulosCompletos())
+
+/*
+obtenerInfoPersonal, que devuelva un array donde cada elemento es un objeto con las propiedades
+    nombre
+    pais
+    edad habiendo un elemento por cada empleade, y donde cada propiedad se corresponde a la propiedad del objeto original (usar map)
+*/
+
+const obtenerInfoPersonal = () => empleades.map(({ nombre, pais, edad }) => {
+  return {
+    nombre: nombre, 
+    pais: pais, 
+    edad: edad
+  }
+})
+//console.log(obtenerInfoPersonal())
+
+/*
+obtenerInfoPuestos, que devuelva un array donde cada elemento es un objeto con las propiedades
+    nombre
+    area
+    puesto
+    seniority habiendo un elemento por cada empleade, y donde cada propiedad se corresponde a la propiedad del objeto original (usar map)
+*/
+
+const obtenerInfoPuestos = () => empleades.map(({ nombre, area, puesto, seniority }) => {
+  return {
+    nombre: nombre, 
+    area: area, 
+    puesto: puesto, 
+    seniority: seniority
+  }
+})
+//console.log(obtenerInfoPuestos())
+
+/*
+obtenerInfoSeniority, que devuelva un array donde cada elemento es un objeto con las propiedades
+    nombre
+    seniority
+    sueldo
+    cantidadLenguajes habiendo un elemento por cada empleade, y donde cada propiedad se corresponde a la propiedad del objeto original, eecepto cantidadLenguajes, que es un número indicando la cantidad de lenguajes que sabe (usar map)
+*/
+
+const obtenerInfoSeniority = () => empleades.map(({ nombre, seniority, sueldo, lenguajes }) => {
+  return {
+    nombre: nombre, 
+    seniority: seniority, 
+    sueldo: sueldo, 
+    cantidadLenguajes: lenguajes.length
+  }
+})
+//console.log(obtenerInfoSeniority())
+
+/*
+obtenerInfoPagos, que devuelva una array donde cada elemento es un objeto con las propiedades
+    nombre
+    sueldoBruto
+    obraSocial
+    jubilacion
+    sueldoNeto habiendo un elemento por cada empleade, donde
+    sueldoBruto es el sueldo del objeto original
+    obraSocial es el 3% del sueldoBruto
+    jubilacion es el 11% del sueldoBruto
+    sueldoNeto es el resultado de restarle a sueldoBruto los valores de obraSocial y jubilacion
+*/
+
+const calcularPorcentaje = (sueldo, porcentaje) => sueldo * (porcentaje / 100)
+
+const obtenerInfoPagos = () => empleades.map(({ nombre, sueldo }) => {
+  const jubilacion = calcularPorcentaje(sueldo, 11)
+  const obraSocial = calcularPorcentaje(sueldo, 3)
+  return {
+    nombre: nombre,
+    sueldoBruto: sueldo, 
+    obraSocial: obraSocial, 
+    jubilacion: jubilacion, 
+    sueldoNeto: sueldo - obraSocial - jubilacion
+  }
+})
+//console.log(obtenerInfoPagos())
+
+// obtenerEstadisticasSeniority que devuelva un objeto donde cada propiedad es un seniority y el valor la cantidad de empleades con dicho seniority
+
+const obtenerEstadisticasSeniority = () => {
+  let seniorities = []
+  for (const {seniority} of empleades) {
+    !seniorities.includes(seniority) && seniorities.push(seniority)
+  }
+  let newObj = {}
+  for (const seniority of seniorities) {
+    newObj[seniority] = empleades.filter(empleade => empleade.seniority === seniority).length
+  }
+  return newObj
+}
+//console.log(obtenerEstadisticasSeniority())
+
+// obtenerEstadisticasLenguajes que devuelva un objeto donde cada propiedad es un lenguaje y el valor la cantidad de empleades que saben dicho lenguaje
+
+const obtenerEstadisticasLenguajes = () => {
+  let losLenguajes = []
+  for (const {lenguajes} of empleades) {
+    for(const lenguaje of lenguajes)
+    !losLenguajes.includes(lenguaje) && losLenguajes.push(lenguaje)
+  }
+  let newObj = {}
+  for (const lenguaje of losLenguajes) {
+    newObj[lenguaje] = empleades.filter(empleade => empleadeSabeLenguaje(empleade, lenguaje)).length
+  }
+  return newObj
+}
+//console.log(obtenerEstadisticasLenguajes())
